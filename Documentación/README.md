@@ -11,12 +11,7 @@ Para esta etapa vamos a trabajar en dos funcionalidades nuevas:
 
 ###### Arquitectura planteada:
 
-https://raw.githubusercontent.com/JulianaAparicio/trabajo-practico-final/tree/main/Documentación/assets/img.png
-
-
-![img.png](img.png)
-
-
+![img.png](assets%2Fimg.png)
 
 ## Installation
 
@@ -51,4 +46,4 @@ Se utilizó Keycloak para la gestión de la autenticación y autorización a la 
 
 ###### Arquitectura planteada:
 
-![img_1.png](img_1.png)
+![img_1.png](assets%2Fimg_1.png)
