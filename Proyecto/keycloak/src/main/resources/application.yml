@@ -1,0 +1,7 @@
+dh:
+  keycloak:
+    serverUrl: http://localhost:8080/
+    realm: master
+    username: admin
+    password: admin
+    clientId: admin-cli
