@@ -11,6 +11,9 @@ Para esta etapa vamos a trabajar en dos funcionalidades nuevas:
 
 ###### Arquitectura planteada:
 
+https://raw.githubusercontent.com/JulianaAparicio/trabajo-practico-final/tree/main/Documentación/assets/img.png
+
+
 ![img.png](img.png)
 
 
