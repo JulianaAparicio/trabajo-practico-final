@@ -13,28 +13,86 @@ Para esta etapa vamos a trabajar en dos funcionalidades nuevas:
 
 ![img.png](assets%2Fimg.png)
 
-## Installation
+A continuación, vemos una descripción de cada uno de los elementos de este proyecto a fin de entender la configuración y el desarrollo de cada parte del mismo.
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
+## Keycloak
 
-```bash
-pip install foobar
-```
+### 1. Dependencias utilizadas
 
-## Usage
+Al igual que en la Entrega Parcial utilizamos Keycloak como IAM. Para ello debemos colocar en nuestro archivo POM la dependencia necesaria:
 
 ```python
-import foobar
-
-# returns 'words'
-foobar.pluralize('word')
-
-# returns 'geese'
-foobar.pluralize('goose')
-
-# returns 'phenomenon'
-foobar.singularize('phenomena')
+		<dependency>
+			<groupId>org.keycloak</groupId>
+			<artifactId>keycloak-spring-boot-starter</artifactId>
+			<version>21.0.1</version>
+		</dependency>
 ```
+
+
+Sin embargo, en este caso no se utilizó el panel de administración de Keycloak, en su lugar usaremos la API de Keycloak (Keycloak ADMIN REST API) para realizar la creación del reino principal, así como también, sus respectivos clientes, usuarios y roles.
+
+Para ello se necesita tener la siguiente dependencia en nuestro archivo POM:
+
+```python
+		<dependency>
+			<groupId>org.keycloak</groupId>
+			<artifactId>keycloak-admin-client</artifactId>
+			<version>21.0.1</version>
+			<scope>compile</scope>
+		</dependency>
+```
+
+### 2. Configuración del archivo Application.yml
+
+El archivo application.yml se realizó de la siguiente manera:
+
+```python
+dh:
+  keycloak:
+    serverUrl: http://localhost:8080/
+    realm: master
+    username: admin
+    password: admin
+    clientId: admin-cli
+```
+
+Donde establecemos la misma configuración que en la Entrega Parcial (solo que acá sin el uso del comando).
+
+### 3. Archivo de configuración de Keycloak
+
+Se creó una clase de configuración llamada "KeycloakConfiguration" que se encargará de leer los atributos que establecimos en el archivo application.yml para luego configurar el cliente REST de Keycloak mediante el builder "KeycloakBuilder". 
+
+Agregamos además un Bean de tipo Keycloak para poder inyectarlo. 
+
+### 4. Model y Service
+
+Se creó una entidad llamada "Cliente" con los datos que se van a leer.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Microservicio ms-bills
+
+
+
+
+
+
+## Gateway
+
+
 
 ## Entrega Parcial
 
