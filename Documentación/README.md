@@ -67,9 +67,13 @@ Agregamos además un Bean de tipo Keycloak para poder inyectarlo.
 
 ### 4. Model y Service
 
-Se creó una entidad llamada "Cliente" con los datos que se van a leer.
+Se creó una entidad llamada "Cliente" con los datos que se van a leer así como también una clase que representa al Service la cual contiene el método "createRealmAndClient".
 
+El mismo recibe 4 parametros: 3 de tipo String (el reino, el client id y el client secret) y un Array de tipo List que contiene los roles.
 
+Utilizando la instancia de la clase Keycloak llamada "keycloakAdmin" creamos el reino. Posteriormente, añadimos los roles que queremos que tenga y los metemos dentro de un Array de tipo List.
+
+Después se realiza la creación de los 2 clientes necesarios: uno para el Gateway y otro para el microservicio users.
 
 
 
@@ -84,6 +88,14 @@ Se creó una entidad llamada "Cliente" con los datos que se van a leer.
 
 
 ## Microservicio ms-bills
+
+
+
+
+
+
+
+## Microservicio ms-users
 
 
 
