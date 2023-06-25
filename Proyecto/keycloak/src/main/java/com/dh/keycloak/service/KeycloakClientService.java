@@ -13,23 +13,23 @@ import java.util.Objects;
 @Service
 public class KeycloakClientService {
 
-    private final Keycloak keycloak;
+    private final Keycloak keycloakAdmin;
 
-    public KeycloakClientService(Keycloak keycloak) {
-        this.keycloak = keycloak;
+    public KeycloakClientService(Keycloak keycloakAdmin) {
+        this.keycloakAdmin = keycloakAdmin;
     }
 
-    public void createRealmAndClient(String reino, String clientId, String clientSecret, List<String> roles) {
+    public void createRealmAndClient(String reign, String clientId, String clientSecret, List<String> roles) {
         // Creamos el reino
-        RealmsResource realmsResource = keycloak.realms();
+        RealmsResource realmsResource = keycloakAdmin.realms();
         RealmRepresentation realm = new RealmRepresentation();
-        realm.setRealm(reino);
+        realm.setRealm(reign);
         realm.setEnabled(true);
-        keycloak.realms().create(realm);
+        keycloakAdmin.realms().create(realm);
         System.out.println("Reino creado exitosamente");
 
         // Seteamos roles a nivel Reino
-        RolesResource rolesResource = realmsResource.realm(reino).roles();
+        RolesResource rolesResource = realmsResource.realm(reign).roles();
         RoleRepresentation rolAdmin = new RoleRepresentation();
         rolAdmin.setName("app_admin");
         RoleRepresentation rolUser = new RoleRepresentation();
@@ -42,37 +42,37 @@ public class KeycloakClientService {
         }
 
         // Verificamos que se haya creado el reino y creamos los clientes
-        RealmRepresentation realmRepresentation = realmsResource.realm(reino).toRepresentation();
+        RealmRepresentation realmRepresentation = realmsResource.realm(reign).toRepresentation();
         String realmName = realmRepresentation.getRealm();
-        if(Objects.equals(realmName, reino)) {
-            RealmResource realmResource = keycloak.realm(reino);
+        if(Objects.equals(realmName, reign)) {
+            RealmResource realmResource = keycloakAdmin.realm(reign);
             ClientsResource clientsResource = realmResource.clients();
             ClientsResource gwResource = realmResource.clients();
 
             // Creamos cliente
-            ClientRepresentation client = new ClientRepresentation();
-            client.setClientId(clientId);
-            client.setSecret(clientSecret);
-            client.setServiceAccountsEnabled(true);
-            client.setDirectAccessGrantsEnabled(true);
-            client.setEnabled(true);
+            ClientRepresentation usersClient = new ClientRepresentation();
+            usersClient.setClientId(clientId);
+            usersClient.setSecret(clientSecret);
+            usersClient.setServiceAccountsEnabled(true);
+            usersClient.setDirectAccessGrantsEnabled(true);
+            usersClient.setEnabled(true);
 
             // Creamos gateway
-            ClientRepresentation gateway = new ClientRepresentation();
-            String url = "http://localhost:9090";
-            gateway.setClientId("gateway-client");
-            gateway.setSecret("gateway-secret");
-            gateway.setRootUrl(url);
-            gateway.setWebOrigins(List.of("/*"));
-            gateway.setRedirectUris(List.of(url+"/*"));
-            gateway.setAdminUrl(url);
-            gateway.setEnabled(true);
-            gateway.setServiceAccountsEnabled(true);
-            gateway.setDirectAccessGrantsEnabled(true);
+            ClientRepresentation gatewayClient = new ClientRepresentation();
+            String url = "http://localhost:8090";
+            gatewayClient.setClientId("gateway-client");
+            gatewayClient.setSecret("gateway-secret");
+            gatewayClient.setRootUrl(url);
+            gatewayClient.setWebOrigins(List.of("/*"));
+            gatewayClient.setRedirectUris(List.of(url+"/*"));
+            gatewayClient.setAdminUrl(url);
+            gatewayClient.setEnabled(true);
+            gatewayClient.setServiceAccountsEnabled(true);
+            gatewayClient.setDirectAccessGrantsEnabled(true);
 
             // Verificamos que se hayan creado los clientes y creamos los roles a nivel Cliente
-            Response response = clientsResource.create(client);
-            Response responseGW = gwResource.create(gateway);
+            Response response = clientsResource.create(usersClient);
+            Response responseGW = gwResource.create(gatewayClient);
             if (response.getStatus() == 201 && responseGW.getStatus() == 201) {
                 // Obtiene el ultimo segmento de la url, en este caso seria el clientId
                 String createdClientId = response.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
