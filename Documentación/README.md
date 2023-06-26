@@ -15,6 +15,8 @@ Para esta etapa vamos a trabajar en dos funcionalidades nuevas:
 
 A continuación, vemos una descripción de cada uno de los elementos de este proyecto a fin de entender la configuración y el desarrollo de cada parte del mismo.
 
+Aclaración: todo el proyecto se realizó utilizando Java en versión 17, el jdk usado fue corretto-17 de Amazon, con lo cual es necesario tenerlo configurado dentro de la estructura del proyecto al momento de hacer la ejecución.
+
 ## Keycloak
 
 ### 1. Dependencias utilizadas
@@ -43,7 +45,7 @@ Para ello se necesita tener la siguiente dependencia en nuestro archivo POM:
 		</dependency>
 ```
 
-### 2. Configuración del archivo Application.yml
+### 2. Configuración del archivo application.yml
 
 El archivo application.yml se realizó de la siguiente manera:
 
@@ -55,9 +57,14 @@ dh:
     username: admin
     password: admin
     clientId: admin-cli
+    clientSecret: CQ5HsXlLFftDzWyrsHYONKIfBJFr6v6X
+    
+server:
+  port: 8084
 ```
 
 Donde establecemos la misma configuración que en la Entrega Parcial (solo que acá sin el uso del comando).
+
 
 ### 3. Archivo de configuración de Keycloak
 
@@ -67,13 +74,31 @@ Agregamos además un Bean de tipo Keycloak para poder inyectarlo.
 
 ### 4. Model y Service
 
-Se creó una entidad llamada "Cliente" con los datos que se van a leer así como también una clase que representa al Service la cual contiene el método "createRealmAndClient".
+Se creó una entidad llamada "Cliente" con los datos que se van a leer así como también una clase que representa al Service la cual contiene los siguientes métodos:
 
-El mismo recibe 4 parametros: 3 de tipo String (el reino, el client id y el client secret) y un Array de tipo List que contiene los roles.
+- createRealm
+- deleteRealm
+- createClient
+- createGatewayClient
+- createUser
+- createRole
+- createGroup
+- assignUserToGroup
 
-Utilizando la instancia de la clase Keycloak llamada "keycloakAdmin" creamos el reino. Posteriormente, añadimos los roles que queremos que tenga y los metemos dentro de un Array de tipo List.
+Dichos métodos son los que se utilizaran en la siguiente clase.
 
-Después se realiza la creación de los 2 clientes necesarios: uno para el Gateway y otro para el microservicio users.
+### 5. KeycloakApplication
+
+Utilizando la inyección del Service realizamos el llamado a los métodos para crear:
+
+1. El reino llamado "EcommerceAparicio"
+2. 2 clientes (Gateway y Users)
+3. 1 Rol denominado "USER".
+4. 2 usuarios.
+5. 1 grupo llamado "PROVIDERS".
+
+Posteriormente asignamos ambos usuarios al grupo creado.
+
 
 
 
@@ -89,21 +114,74 @@ Después se realiza la creación de los 2 clientes necesarios: uno para el Gatew
 
 ## Microservicio ms-bills
 
+Se agregó dentro del Controller un nuevo endpoint para dar de alta las facturas teniendo en cuenta que solo aquellos usuarios que pertenecen al grupo "PROVIDERS" tienen acceso al mismo.
 
+Para ello se utilizó nuevamente la anotación @PreAuthorize:
 
+```python
+@PostMapping
+@PreAuthorize("hasAnyAuthority('/PROVIDERS')")
+public ResponseEntity<Bill> save(@RequestBody Bill bill){
+return ResponseEntity.ok().body(service.save(bill));
+}
+```
 
 
 
 
 ## Microservicio ms-users
 
+### 1. Características
+
+Se utilizó Spring Boot en la versión 3.0.8, Maven y Java 17. El jdk del proyecto 
+
+### 2. Dependencias utilizadas
+
+Este microservicio se creó utilizando las siguientes dependencias:
+
+- Spring Web
+- Lombok
+- Eureka Discovery Client
+- Spring Boot Actuator
+- OAuth2 Client
+- OAuth2 Resource Server
+- OpenFeign
+- Keycloak Admin Client
+
+### 3. Configuración del archivo application.properties
+
+El archivo application.properties se realizó de la siguiente manera:
+
+```python
+spring.application.name=ms-users
+eureka.instance.hostname=localhost
+server.port= 8085
+eureka.instance.instance-id=${spring.application.name}:${spring.application.instance_id:${random.value}}
+eureka.client.service-url.defaultZone= http://localhost:8761/eureka
+
+dh.keycloak.serverUrl=http://localhost:8080/
+dh.keycloak.realm=EcommerceAparicio
+dh.keycloak.clientId=users-client
+dh.keycloak.clientSecret=
+
+spring.security.oauth2.resourceserver.jwt.issuer-uri=http://localhost:8080/realms/EcommerceAparicio
+spring.security.oauth2.client.registration.keycloak.authorization-grant-type=client_credentials
+spring.security.oauth2.client.registration.keycloak.client-id=users-client
+spring.security.oauth2.client.registration.keycloak.client-secret=
+spring.security.oauth2.client.provider.keycloak.token-uri=http://localhost:8085/realms/DH/protocol/openid-connect/token
+```
+
+### 4. Model, Repository
+
+Dentro del model se crearon 2 clases: Bill y User.
 
 
 
 
 
-## Gateway
+## API Gateway
 
+Se partió de la base del Gateway creado para la Entrega Parcial.
 
 
 ## Entrega Parcial
