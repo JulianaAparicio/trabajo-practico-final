@@ -15,7 +15,12 @@ Para esta etapa vamos a trabajar en dos funcionalidades nuevas:
 
 A continuación, vemos una descripción de cada uno de los elementos de este proyecto a fin de entender la configuración y el desarrollo de cada parte del mismo.
 
-Aclaración: todo el proyecto se realizó utilizando Java en versión 17, el jdk usado fue corretto-17 de Amazon, con lo cual es necesario tenerlo configurado dentro de la estructura del proyecto al momento de hacer la ejecución.
+#### Aclaración: 
+Todo el proyecto se realizó utilizando:
+
+- Spring Boot 3.0.7
+- Java versión 17.
+- JDK usado fue corretto-17 de Amazon
 
 ## Keycloak
 
@@ -131,11 +136,7 @@ return ResponseEntity.ok().body(service.save(bill));
 
 ## Microservicio ms-users
 
-### 1. Características
-
-Se utilizó Spring Boot en la versión 3.0.8, Maven y Java 17. El jdk del proyecto 
-
-### 2. Dependencias utilizadas
+### 1. Dependencias utilizadas
 
 Este microservicio se creó utilizando las siguientes dependencias:
 
@@ -148,7 +149,7 @@ Este microservicio se creó utilizando las siguientes dependencias:
 - OpenFeign
 - Keycloak Admin Client
 
-### 3. Configuración del archivo application.properties
+### 2. Configuración del archivo application.properties
 
 El archivo application.properties se realizó de la siguiente manera:
 
@@ -171,7 +172,7 @@ spring.security.oauth2.client.registration.keycloak.client-secret=
 spring.security.oauth2.client.provider.keycloak.token-uri=http://localhost:8085/realms/DH/protocol/openid-connect/token
 ```
 
-### 4. Model, Repository
+### 3. Model, Repository
 
 Dentro del model se crearon 2 clases: Bill y User.
 
