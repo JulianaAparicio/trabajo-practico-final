@@ -28,7 +28,7 @@ public class BillController {
         return ResponseEntity.ok().body(service.save(bill));
     }
 
-    @GetMapping("/findBy")
+    @GetMapping("/findById")
     public ResponseEntity<List<Bill>> getAll(@RequestParam String customerBill) {
         return ResponseEntity.ok().body(service.findByCustomerId(customerBill));
     }
