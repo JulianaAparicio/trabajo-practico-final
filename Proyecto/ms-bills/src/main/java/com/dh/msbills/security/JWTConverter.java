@@ -19,7 +19,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class KeyCloakJwtAuthenticationConverter implements Converter<Jwt, AbstractAuthenticationToken> {
+public class JWTConverter implements Converter<Jwt, AbstractAuthenticationToken> {
   private final JwtGrantedAuthoritiesConverter defaultGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
 
   private static Collection<? extends GrantedAuthority> extractResourceRoles(final Jwt jwt) throws JsonProcessingException {
@@ -29,6 +29,7 @@ public class KeyCloakJwtAuthenticationConverter implements Converter<Jwt, Abstra
     resourcesRoles.addAll(extractRoles("resource_access", objectMapper.readTree(objectMapper.writeValueAsString(jwt)).get("claims")));
     resourcesRoles.addAll(extractRolesRealmAccess("realm_access", objectMapper.readTree(objectMapper.writeValueAsString(jwt)).get("claims")));
     resourcesRoles.addAll(extractScope("scope", objectMapper.readTree(objectMapper.writeValueAsString(jwt)).get("claims")));
+    resourcesRoles.addAll(extractGroup("groups", objectMapper.readTree(objectMapper.writeValueAsString(jwt)).get("claims")));
     return resourcesRoles;
   }
 
@@ -75,7 +76,20 @@ public class KeyCloakJwtAuthenticationConverter implements Converter<Jwt, Abstra
     return authorityList;
   }
 
-  public KeyCloakJwtAuthenticationConverter() {
+  private static List<GrantedAuthority> extractGroup(String route, JsonNode jwt) {
+    Set<String> rolesWithPrefix = new HashSet<>();
+
+    jwt.path(route)
+            .elements()
+            .forEachRemaining(r -> rolesWithPrefix.add(r.asText()));
+
+    final List<GrantedAuthority> authorityList =
+            AuthorityUtils.createAuthorityList(rolesWithPrefix.toArray(new String[0]));
+
+    return authorityList;
+  }
+
+  public JWTConverter() {
   }
 
   public AbstractAuthenticationToken convert(final Jwt source) {
