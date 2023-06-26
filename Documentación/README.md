@@ -119,9 +119,45 @@ Posteriormente asignamos ambos usuarios al grupo creado.
 
 ## Microservicio ms-bills
 
-Se agregó dentro del Controller un nuevo endpoint para dar de alta las facturas teniendo en cuenta que solo aquellos usuarios que pertenecen al grupo "PROVIDERS" tienen acceso al mismo.
+Partiendo de nuestra base de la Entrega Parcial nos centraremos en las modificaciones que se hicieron.
 
-Para ello se utilizó nuevamente la anotación @PreAuthorize:
+### 1. JWT Converter
+
+Como ahora necesitaremos que todos los usuarios pertenecientes al grupo "PROVIDERS" sean quienes pueden dar de alta las facturas, se añadió una modificación a esta clase para que se haga la extracción de los grupos del token.
+
+Se creó un nuevo método para este fin:
+
+```python
+private static List<GrantedAuthority> extractGroup(String route, JsonNode jwt) {
+Set<String> rolesWithPrefix = new HashSet<>();
+
+    jwt.path(route)
+            .elements()
+            .forEachRemaining(r -> rolesWithPrefix.add(r.asText()));
+
+    final List<GrantedAuthority> authorityList =
+            AuthorityUtils.createAuthorityList(rolesWithPrefix.toArray(new String[0]));
+
+    return authorityList;
+}
+```
+
+Y se añadió junto con los demás de la misma forma que ya habíamos creado:
+
+```python
+resourcesRoles.addAll(extractGroup("groups", objectMapper.readTree(objectMapper.writeValueAsString(jwt)).get("claims")));
+```
+
+
+### 2. Bill Controller
+
+Se agregaron 2 nuevos endpoints para:
+
+1) Dar de alta facturas (con la condición de que solo los usuarios del grupo "PROVIDERS" puedan hacerlo).
+
+2) Buscar facturas por ID de usuario.
+
+Para ello se utilizó nuevamente la anotación @PreAuthorize para la restricción del primer caso:
 
 ```python
 @PostMapping
@@ -131,6 +167,16 @@ return ResponseEntity.ok().body(service.save(bill));
 }
 ```
 
+En cuanto al segundo caso, la búsqueda se hace a través del ID del usuario que recibe por parámetro:
+
+```python
+@GetMapping("/findById")
+public ResponseEntity<List<Bill>> getAll(@RequestParam String customerBill) {
+return ResponseEntity.ok().body(service.findByCustomerId(customerBill));
+}
+```
+
+Este endpoints nos traerá todas las facturas asociadas a ese usuario en particular.
 
 
 
