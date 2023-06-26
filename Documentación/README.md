@@ -182,7 +182,20 @@ Dentro del model se crearon 2 clases: Bill y User.
 
 ## API Gateway
 
+### Configuración del archivo application.properties
+
 Se partió de la base del Gateway creado para la Entrega Parcial.
+
+En este caso se añadió la configuración del ruteo para el nuevo microservicio de ms-users:
+
+```python
+spring.cloud.gateway.routes[1].id=ms-users
+spring.cloud.gateway.routes[1].uri=lb://ms-users
+spring.cloud.gateway.routes[1].predicates=Path=/api/v1/**
+```
+
+(MODIFICAR EL CLIENT SECRET)
+
 
 
 ## Entrega Parcial
