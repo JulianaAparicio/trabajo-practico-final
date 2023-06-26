@@ -5,3 +5,7 @@ dh:
     username: admin
     password: admin
     clientId: admin-cli
+    clientSecret: CQ5HsXlLFftDzWyrsHYONKIfBJFr6v6X
+
+server:
+  port: 8084
