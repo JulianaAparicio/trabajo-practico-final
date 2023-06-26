@@ -15,19 +15,24 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class OAuth2ResourceServerSecurityConfiguration {
 
-  
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.oauth2ResourceServer().jwt().jwtAuthenticationConverter(new KeyCloakJwtAuthenticationConverter());
+
+        http.oauth2ResourceServer().jwt().jwtAuthenticationConverter(new JWTConverter());
+
         http.cors().and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .anyRequest().authenticated();
+                .anyRequest()
+                .authenticated();
+
         return http.build();
     }
 
     @Bean
     public JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder.withJwkSetUri("http://localhost:8080/realms/Ecommerce/protocol/openid-connect/certs").build();
+        return NimbusJwtDecoder
+                .withJwkSetUri("http://localhost:8080/realms/EcommerceAparicio/protocol/openid-connect/certs")
+                .build();
     }
 }
