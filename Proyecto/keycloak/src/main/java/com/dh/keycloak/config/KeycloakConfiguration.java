@@ -1,6 +1,6 @@
 package com.dh.keycloak.config;
 
-import org.jboss.resteasy.client.jaxrs.internal.ResteasyClientBuilderImpl;
+import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +25,9 @@ public class KeycloakConfiguration {
     @Value("${dh.keycloak.clientId}")
     private String clientId;
 
+    @Value("${dh.keycloak.clientSecret}")
+    private String clientSecret;
+
     @Bean
     public Keycloak buildClient(){
         return KeycloakBuilder.builder()
@@ -33,7 +36,8 @@ public class KeycloakConfiguration {
                 .username(username)
                 .password(password)
                 .clientId(clientId)
-                .resteasyClient(new ResteasyClientBuilderImpl().connectionPoolSize(10).build())
+                .clientSecret(clientSecret)
+                .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
                 .build();
     }
 
