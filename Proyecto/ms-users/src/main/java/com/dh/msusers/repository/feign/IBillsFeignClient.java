@@ -11,6 +11,6 @@ import java.util.List;
 
 @FeignClient(name = "ms-bill",configuration = OAuthFeignConfig.class)
 public interface IBillsFeignClient {
-  @GetMapping("/bills/findBy")
+  @GetMapping("/api/v1/bills/findById")
   ResponseEntity<List<Bill>> findByCustomer(@RequestParam String customerBill);
 }
