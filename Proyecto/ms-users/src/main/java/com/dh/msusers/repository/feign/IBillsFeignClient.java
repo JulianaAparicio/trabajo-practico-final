@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@FeignClient(name = "ms-bill",configuration = OAuthFeignConfig.class)
+@FeignClient(name = "ms-bills",configuration = OAuthFeignConfig.class)
 public interface IBillsFeignClient {
   @GetMapping("/api/v1/bills/findById")
   ResponseEntity<List<Bill>> findByCustomer(@RequestParam String customerBill);
+
 }

@@ -53,8 +53,7 @@ public class OAuthClientCredentialsFeignManager {
       }
 
       @Override
-      public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-      }
+      public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {}
 
       @Override
       public String getName() {
@@ -66,9 +65,9 @@ public class OAuthClientCredentialsFeignManager {
   public String getAccessToken() {
     try {
       OAuth2AuthorizeRequest oAuth2AuthorizeRequest = OAuth2AuthorizeRequest
-          .withClientRegistrationId(clientRegistration.getRegistrationId())
-          .principal(principal)
-          .build();
+              .withClientRegistrationId(clientRegistration.getRegistrationId())
+              .principal(principal)
+              .build();
       OAuth2AuthorizedClient client = manager.authorize(oAuth2AuthorizeRequest);
       if (isNull(client)) {
         throw new IllegalStateException("client credentials flow on " + clientRegistration.getRegistrationId() + " failed, client is null");
