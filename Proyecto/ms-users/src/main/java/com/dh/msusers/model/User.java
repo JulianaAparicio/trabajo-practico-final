@@ -1,10 +1,12 @@
 package com.dh.msusers.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
 
+@AllArgsConstructor
 @Getter
 @Setter
 public class User {
@@ -19,7 +21,6 @@ public class User {
     this.userName = userName;
     this.email = email;
     this.firstName = firstName;
-
   }
 }
 
