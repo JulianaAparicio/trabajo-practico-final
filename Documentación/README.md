@@ -203,6 +203,7 @@ El archivo application.properties se realizó de la siguiente manera:
 spring.application.name=ms-users
 
 server.port= 8085
+server.servlet.context-path=/api/v1/
 
 eureka.instance.hostname=localhost
 eureka.instance.instance-id=${spring.application.name}:${spring.application.instance_id:${random.value}}
@@ -217,11 +218,12 @@ spring.security.oauth2.client.provider.keycloak.issuer-uri=http://localhost:8080
 spring.security.oauth2.client.registration.keycloak.authorization-grant-type=client_credentials
 spring.security.oauth2.client.registration.keycloak.client-id=users-client
 spring.security.oauth2.client.registration.keycloak.client-secret=qPLYzh3TawUDNjIs8vjJOlGhrVKZBwuE
-spring.security.oauth2.client.provider.keycloak.token-uri=http://localhost:8080/realms/DH/protocol/openid-connect/token
+spring.security.oauth2.client.provider.keycloak.token-uri=http://localhost:8085/login/oauth2/code/keycloak
 ```
 
 Como podemos observar se configuró para ser levantado en el puerto 8085 (puerto estático) mientras que la configuración del Eureka se mantuvo igual que para el microservicio ms-bills.
-En cuanto a la seguridad, se replicó la misma configuración que en ms-bills modificando el puerto
+
+En cuanto a la seguridad, se implementó la configuración de Keycloak para poder conectarse correctamente.
 
 
 ### 3. Model
