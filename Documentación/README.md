@@ -255,6 +255,7 @@ El controller posee un Endpoint que permite buscar un usuario por ID y sus factu
 
 Dentro de configuration tenemos, por un lado, la configuración para el uso de Feign y por otro la seguridad del microservicio.
 
+También se añade la configuración de Keycloak para generar el cliente.
 
 ### 8. Clase principal
 
