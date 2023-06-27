@@ -201,28 +201,58 @@ El archivo application.properties se realizó de la siguiente manera:
 
 ```python
 spring.application.name=ms-users
-eureka.instance.hostname=localhost
+
 server.port= 8085
+
+eureka.instance.hostname=localhost
 eureka.instance.instance-id=${spring.application.name}:${spring.application.instance_id:${random.value}}
 eureka.client.service-url.defaultZone= http://localhost:8761/eureka
 
-dh.keycloak.serverUrl=http://localhost:8080/
+dh.keycloak.serverUrl=http://localhost:8080
 dh.keycloak.realm=EcommerceAparicio
 dh.keycloak.clientId=users-client
-dh.keycloak.clientSecret=
+dh.keycloak.clientSecret=qPLYzh3TawUDNjIs8vjJOlGhrVKZBwuE
 
-spring.security.oauth2.resourceserver.jwt.issuer-uri=http://localhost:8080/realms/EcommerceAparicio
+spring.security.oauth2.client.provider.keycloak.issuer-uri=http://localhost:8080/realms/EcommerceAparicio
 spring.security.oauth2.client.registration.keycloak.authorization-grant-type=client_credentials
 spring.security.oauth2.client.registration.keycloak.client-id=users-client
-spring.security.oauth2.client.registration.keycloak.client-secret=
-spring.security.oauth2.client.provider.keycloak.token-uri=http://localhost:8085/realms/DH/protocol/openid-connect/token
+spring.security.oauth2.client.registration.keycloak.client-secret=qPLYzh3TawUDNjIs8vjJOlGhrVKZBwuE
+spring.security.oauth2.client.provider.keycloak.token-uri=http://localhost:8080/realms/DH/protocol/openid-connect/token
 ```
 
-### 3. Model, Repository
+Como podemos observar se configuró para ser levantado en el puerto 8085 (puerto estático) mientras que la configuración del Eureka se mantuvo igual que para el microservicio ms-bills.
+En cuanto a la seguridad, se replicó la misma configuración que en ms-bills modificando el puerto
 
-Dentro del model se crearon 2 clases: Bill y User.
+
+### 3. Model
+
+Dentro del model se crearon 2 clases: 
+
+1) Bill (para traer las facturas con Feign).
+
+2) User (que mapea los datos del usuario de Keycloak).
 
 
+### 4. Repository
+
+Dentro de este paquete tenemos la interfaz de BillsRepository, así como también, una carpeta con la lógica de Feign dentro para la comunicación con el microservicio ms-bills.
+
+Además, incluye la clase KeycloakUserRepository en donde se inyecta, por un lado, el Keycloak, el Feign de Bills que nos traerá la información de las facturas y el nombre del reino que obtenemos de nuestro archivo application.properties.
+
+
+### 5. Service
+
+El service contiene la lógica del método para buscar el usuario por ID e incluir todas las facturas asociadas al mismo, para ello se vale nuevamente del keycloak para obtener la información de los usuarios y Feign para la de facturas.
+
+
+### 6. Controller
+
+El controller posee un Endpoint que permite buscar un usuario por ID y sus facturas.
+
+
+### 6. Clase principal
+
+En MsUsersApplication se añadió la anotación @EnableFeignClients para poder hacer uso de Feign.
 
 
 
