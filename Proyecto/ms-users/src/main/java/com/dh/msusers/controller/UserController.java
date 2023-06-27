@@ -16,7 +16,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/findById")
-    public ResponseEntity<User> getAll(@RequestParam String customerBill) {
+    public ResponseEntity<User> getUserById(@RequestParam String customerBill) {
         return ResponseEntity.ok().body(userService.getAllBill(customerBill));
     }
 }

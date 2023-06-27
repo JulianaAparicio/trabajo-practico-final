@@ -14,23 +14,23 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BillController {
 
-    private final BillService service;
+    private final BillService billService;
 
     @GetMapping("/all")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<Bill>> getAll() {
-        return ResponseEntity.ok().body(service.getAllBill());
+        return ResponseEntity.ok().body(billService.getAllBill());
     }
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('/PROVIDERS')")
     public ResponseEntity<Bill> save(@RequestBody Bill bill){
-        return ResponseEntity.ok().body(service.save(bill));
+        return ResponseEntity.ok().body(billService.save(bill));
     }
 
     @GetMapping("/findById")
-    public ResponseEntity<List<Bill>> getAll(@RequestParam String customerBill) {
-        return ResponseEntity.ok().body(service.findByCustomerId(customerBill));
+    public ResponseEntity<List<Bill>> getAllBillsByCustomerId(@RequestParam String customerBill) {
+        return ResponseEntity.ok().body(billService.findByCustomerId(customerBill));
     }
 
 }
