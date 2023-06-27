@@ -230,7 +230,7 @@ En cuanto a la seguridad, se implementó la configuración de Keycloak para pode
 
 Dentro del model se crearon 2 clases: 
 
-1) Bill (para traer las facturas con Feign).
+1) Bill (para traer las facturas utilizando Feign).
 
 2) User (que mapea los datos del usuario de Keycloak).
 
@@ -251,8 +251,12 @@ El service contiene la lógica del método para buscar el usuario por ID e inclu
 
 El controller posee un Endpoint que permite buscar un usuario por ID y sus facturas.
 
+### 7. Configuration
 
-### 6. Clase principal
+Dentro de configuration tenemos, por un lado, la configuración para el uso de Feign y por otro la seguridad del microservicio.
+
+
+### 8. Clase principal
 
 En MsUsersApplication se añadió la anotación @EnableFeignClients para poder hacer uso de Feign.
 
