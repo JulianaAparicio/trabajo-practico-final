@@ -109,6 +109,25 @@ Luego utilizando el método para asignar usuarios a un grupo los asociamos al mi
 Una vez que se ejecute la aplicación se creará automáticamente todo en Keycloak.
 
 
+### 6. Configuraciones adicionales
+
+Dentro de la página de Keycloak, debemos dirigirnos a Client Scopes a profile y en el menú Mappers añadir el grupo:
+
+![keycloak config.png](assets%2Fkeycloak%20config.png)
+
+Además, debemos tener habilitadas esas 3 opciones que se muestran en la imagen.
+
+Nos quedaría asi:
+
+![keycloak config 2.png](assets%2Fkeycloak%20config%202.png)
+
+Por otra parte, dentro de los Clients debemos habilitar en los 2 clientes que creamos los siguientes service account roles:
+
+![service-account-roles.png](assets%2Fservice-account-roles.png)
+
+De esta forma, tendrán acceso a la información de los usuarios.
+
+
 
 ## Microservicio ms-bills
 
