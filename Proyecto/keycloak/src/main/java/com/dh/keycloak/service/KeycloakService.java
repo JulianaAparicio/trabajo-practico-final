@@ -112,17 +112,19 @@ public class KeycloakService {
 
     public void assignUserToGroup(String realmName, String username, String groupName) {
         RealmResource realmsResource = keycloak.realms().realm(realmName);
+
         UsersResource usersResource = realmsResource.users();
         GroupsResource groupsResource = realmsResource.groups();
-
-        UserRepresentation user = usersResource.search(username).get(0);
 
         GroupRepresentation group = groupsResource.groups().stream()
                 .filter(g -> g.getName().equals(groupName))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Group not found"));
 
-        groupsResource.group(group.getId()).members().add(user);
+        UserRepresentation user = usersResource.search(username).get(0);
+        user.setGroups(List.of(groupName));
+
+        //groupsResource.group(group.getId()).members().add(user);
     }
 
 }
