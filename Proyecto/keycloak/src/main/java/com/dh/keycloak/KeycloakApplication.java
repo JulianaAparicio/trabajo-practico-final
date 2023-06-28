@@ -20,7 +20,9 @@ public class KeycloakApplication implements CommandLineRunner {
 	private static final String GATEWAY_CLIENT_SECRET = "gateway-client-secret";
 	private static final String GATEWAY_URL = "http://localhost:8090";
 	private static final String USER1_NAME = "Juliana";
+	private static final String USER1_ID = "user-juliana";
 	private static final String USER2_NAME = "Pia";
+	private static final String USER2_ID = "user-pia";
 	private static final String USER_PASSWORD = "password";
 	private static final String ROLE_NAME = "USER";
 	private static final String GROUP_NAME = "PROVIDERS";
@@ -49,8 +51,8 @@ public class KeycloakApplication implements CommandLineRunner {
 		keycloakService.createClient(REALM_NAME, USERS_CLIENT,CLIENT_SECRET);
 		keycloakService.createGatewayClient(REALM_NAME, GATEWAY_CLIENT, GATEWAY_CLIENT_SECRET, GATEWAY_URL);
 
-		keycloakService.createUser(REALM_NAME, USER1_NAME, USER_PASSWORD);
-		keycloakService.createUser(REALM_NAME, USER2_NAME, USER_PASSWORD);
+		keycloakService.createUser(REALM_NAME, USER1_NAME, USER_PASSWORD, USER1_ID);
+		keycloakService.createUser(REALM_NAME, USER2_NAME, USER_PASSWORD, USER2_ID);
 
 		keycloakService.createRole(ROLE_NAME);
 

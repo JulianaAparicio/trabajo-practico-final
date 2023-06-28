@@ -77,12 +77,13 @@ public class KeycloakService {
 
     }
 
-    public void createUser(String realmName, String username, String password) {
+    public void createUser(String realmName, String username, String password, String id) {
         RealmResource realmsResource = keycloak.realms().realm(realmName);
         UsersResource usersResource = realmsResource.users();
 
         UserRepresentation userRepresentation = new UserRepresentation();
         userRepresentation.setUsername(username);
+        userRepresentation.setId(id);
         userRepresentation.setEnabled(true);
 
         CredentialRepresentation credential = new CredentialRepresentation();
