@@ -88,7 +88,7 @@ Se creó una entidad llamada "Client" con los datos que se van a leer así como 
 - createClient (crea un cliente)
 - createGatewayClient (crea un cliente para el Gateway)
 - createUser (crea un usuario)
-- createRole 
+- createRole (crea un rol)
 - createGroup (crea un grupo)
 - assignUserToGroup (asigna un usuario a un grupo determinado)
 
