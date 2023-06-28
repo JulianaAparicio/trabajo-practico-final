@@ -22,6 +22,8 @@ Todo el proyecto se realizó utilizando:
 - Java versión 17.
 - JDK usado fue corretto-17 de Amazon
 
+
+
 ## Keycloak
 
 ### 1. Dependencias utilizadas
@@ -37,7 +39,7 @@ Al igual que en la Entrega Parcial utilizamos Keycloak como IAM. Para ello debem
 ```
 
 
-Sin embargo, en este caso no se utilizó el panel de administración de Keycloak, en su lugar usaremos la API de Keycloak (Keycloak ADMIN REST API) para realizar la creación del reino principal, así como también, sus respectivos clientes, usuarios y roles.
+Sin embargo, en este caso no se utilizó el panel de administración de Keycloak, en su lugar usaremos la API de Keycloak (Keycloak ADMIN REST API) para realizar la creación del reino principal, así como también, sus respectivos clientes, usuarios, grupos y roles.
 
 Para ello se necesita tener la siguiente dependencia en nuestro archivo POM:
 
@@ -79,16 +81,16 @@ Agregamos además un Bean de tipo Keycloak para poder inyectarlo.
 
 ### 4. Model y Service
 
-Se creó una entidad llamada "Cliente" con los datos que se van a leer así como también una clase que representa al Service la cual contiene los siguientes métodos:
+Se creó una entidad llamada "Client" con los datos que se van a leer así como también una clase que representa al Service la cual contiene los siguientes métodos:
 
-- createRealm
-- deleteRealm
-- createClient
-- createGatewayClient
-- createUser
-- createRole
-- createGroup
-- assignUserToGroup
+- createRealm (crea el reino, así como también, los roles a nivel del mismo)
+- deleteRealm (borra un reino)
+- createClient (crea un cliente)
+- createGatewayClient (crea un cliente para el Gateway)
+- createUser (crea un usuario)
+- createRole 
+- createGroup (crea un grupo)
+- assignUserToGroup (asigna un usuario a un grupo determinado)
 
 Dichos métodos son los que se utilizaran en la siguiente clase.
 
@@ -97,23 +99,14 @@ Dichos métodos son los que se utilizaran en la siguiente clase.
 Utilizando la inyección del Service realizamos el llamado a los métodos para crear:
 
 1. El reino llamado "EcommerceAparicio"
-2. 2 clientes (Gateway y Users)
-3. 1 Rol denominado "USER".
-4. 2 usuarios.
-5. 1 grupo llamado "PROVIDERS".
+2. 2 clientes (gateway-client y users-client)
+3. 2 usuarios (juliana y pia)
+4. 1 grupo llamado "PROVIDERS".
+5. 1 rol llamado "USER".
 
-Posteriormente asignamos ambos usuarios al grupo creado.
+Luego utilizando el método para asignar usuarios a un grupo los asociamos al mismo.
 
-
-
-
-
-
-
-
-
-
-
+Una vez que se ejecute la aplicación se creará automáticamente todo en Keycloak.
 
 
 
@@ -212,12 +205,12 @@ eureka.client.service-url.defaultZone= http://localhost:8761/eureka
 dh.keycloak.serverUrl=http://localhost:8080
 dh.keycloak.realm=EcommerceAparicio
 dh.keycloak.clientId=users-client
-dh.keycloak.clientSecret=qPLYzh3TawUDNjIs8vjJOlGhrVKZBwuE
+dh.keycloak.clientSecret=client-secret
 
 spring.security.oauth2.client.provider.keycloak.issuer-uri=http://localhost:8080/realms/EcommerceAparicio
 spring.security.oauth2.client.registration.keycloak.authorization-grant-type=client_credentials
 spring.security.oauth2.client.registration.keycloak.client-id=users-client
-spring.security.oauth2.client.registration.keycloak.client-secret=qPLYzh3TawUDNjIs8vjJOlGhrVKZBwuE
+spring.security.oauth2.client.registration.keycloak.client-secret=client-secret
 spring.security.oauth2.client.provider.keycloak.token-uri=http://localhost:8085/login/oauth2/code/keycloak
 ```
 
@@ -251,11 +244,13 @@ El service contiene la lógica del método para buscar el usuario por ID e inclu
 
 El controller posee un Endpoint que permite buscar un usuario por ID y sus facturas.
 
+
 ### 7. Configuration
 
 Dentro de configuration tenemos, por un lado, la configuración para el uso de Feign y por otro la seguridad del microservicio.
 
 También se añade la configuración de Keycloak para generar el cliente.
+
 
 ### 8. Clase principal
 
@@ -276,8 +271,6 @@ spring.cloud.gateway.routes[1].id=ms-users
 spring.cloud.gateway.routes[1].uri=lb://ms-users
 spring.cloud.gateway.routes[1].predicates=Path=/api/v1/**
 ```
-
-(MODIFICAR EL CLIENT SECRET)
 
 
 
